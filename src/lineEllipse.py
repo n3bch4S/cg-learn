@@ -257,9 +257,12 @@ def stepEpitrochoid(a: int, b: int, k: int) -> list[tuple[int, int]]:
         x = round(x)
         y = round(y)
         point = x, y
+
+        """only keep new point relate to previous point for faster rendering(a bit)"""
         if oldPoint != point:
             pointList.append(point)
         oldPoint = point
+        
         t += stepT
 
     return pointList
@@ -282,9 +285,12 @@ def stepHypotrochoid(a: int, b: int, k: int) -> list[tuple[int, int]]:
         x = round(x)
         y = round(y)
         point = x, y
+
+        """only keep new point relate to previous point for faster rendering(a bit)"""
         if oldPoint != point:
             pointList.append(point)
         oldPoint = point
+
         t += stepT
 
     return pointList
