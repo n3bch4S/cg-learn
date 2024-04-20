@@ -305,62 +305,6 @@ class PixelMap:
         self.pixelMap[index] = colorRow
 
 
-# class Window:
-#     DEFAULT_WIDTH = 8
-#     DEFAULT_HEIGHT = 8
-#     DEFAULT_BACKGROUND_COLOR = Color(*Color.BLACK)
-#     DEFAULT_PIXEL_COLOR = Color(*Color.WHITE)
-#     DEFAULT_PIXEL_MAP = PixelMap(DEFAULT_WIDTH, DEFAULT_HEIGHT)
-
-#     WINDOW_SCALE = 2
-#     WINDOW_WIDTH = round(DEFAULT_WIDTH * math.sqrt(WINDOW_SCALE))
-#     WINDOW_HEIGHT = round(DEFAULT_HEIGHT * math.sqrt(WINDOW_SCALE))
-
-#     def __init__(
-#         self,
-#         width: int = DEFAULT_WIDTH,
-#         height: int = DEFAULT_HEIGHT,
-#         backgroundColor: Color = DEFAULT_BACKGROUND_COLOR,
-#         pixelMap: PixelMap = DEFAULT_PIXEL_MAP,
-#     ) -> None:
-#         self.__width = width
-#         self.__height = height
-#         self.__backgroundColor = backgroundColor
-#         self.__pixelMap = pixelMap
-
-#         self.__app = pg.mkQApp("ImageItem Example")
-#         self.__win = pg.GraphicsLayoutWidget()
-#         self.__win.show()
-#         self.__win.setWindowTitle("pyqtgraph example: ImageItem")
-#         self.__view = self.__win.addViewBox()
-
-#         self.__img = pg.ImageItem()
-#         self.__img.setImage(pixelMap.getNpPixelMap())
-#         self.__view.addItem(self.__img)
-
-#     def start(self) -> None:
-#         pg.exec()
-#         pass
-
-#     def stop(self) -> None:
-#         pg.exit()
-#         pass
-
-#     def update(self) -> None:
-#         # self.stop()
-#         self.__img.setImage(self.__pixelMap.getNpPixelMap())
-#         # self.start()
-#         pass
-
-#     def plotMap(self, pixelMap: PixelMap) -> None:
-#         self.__pixelMap = pixelMap
-#         self.update()
-
-#     def setPixel(self, pixel: Pixel) -> None:
-#         self.__pixelMap.setPixel(*pixel.getPixelTuple())
-#         self.update()
-
-
 class Graphics:
     DEFAULT_WINDOW_NAME: str = "Graphic"
     DEFAULT_WIDTH: int = 800
@@ -426,6 +370,11 @@ class Graphics:
         for object in objects:
             self.drawObject(object[0], object[1])
 
+    def update(self) -> None:
+        self.fillBackground()
+        self.drawObjects(self.objectLayer)
+        self.image.draw(self.win)
+
     def refresh(self) -> None:
         self.image.undraw()
         self.fillBackground()
@@ -451,27 +400,21 @@ if __name__ == "__main__":
         gm.Point(0, halfHeight), gm.Point(width - 1, halfHeight)
     )
     verticalBorder: gm.LineSegment = gm.LineSegment(
-        gm.Point(halfWidth, 0), gm.Point(halfWidth, height - 1)
+        gm.Point(halfWidth, halfHeight), gm.Point(halfWidth, height - 1)
     )
-    graphics.objectLayer.append((horizonBorder, RGB(*RGB.WHITE)))
+    # graphics.objectLayer.append((horizonBorder, RGB(*RGB.WHITE)))
     graphics.objectLayer.append((verticalBorder, RGB(*RGB.WHITE)))
 
+    """building pitcher 1
+    using cubic bezier spline
+    ~ using cubic b-spline with knot vector = (0, 0, 0, 0, 1, 1, 1, 1)
+    """
     degreePoly: int = 3
     knot: KnotVector = KnotVector(0, 0, 0, 0, 1, 1, 1, 1)
 
-    p1: gm.Point = gm.Point(30, 550)
-    p2: gm.Point = gm.Point(150, 530)
-    p3: gm.Point = gm.Point(-70, 430)
-    p4: gm.Point = gm.Point(50, 350)
-    controls: list[gm.Point] = [p1, p2, p3, p4]
-    baseLine: gm.PolyLine = gm.PolyLine(*controls)
-    spline: BSpline = BSpline(controls, degreePoly, knot)
-    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
-    graphics.objectLayer.append((spline, RGB(*RGB.CITRINE)))
-
-    p1: gm.Point = gm.Point(50, 350)
-    p2: gm.Point = gm.Point(75, 340)
-    p3: gm.Point = gm.Point(100, 340)
+    p1: gm.Point = gm.Point(100, 550)
+    p2: gm.Point = gm.Point(225, 525)
+    p3: gm.Point = gm.Point(0, 450)
     p4: gm.Point = gm.Point(125, 350)
     controls: list[gm.Point] = [p1, p2, p3, p4]
     baseLine: gm.PolyLine = gm.PolyLine(*controls)
@@ -479,4 +422,336 @@ if __name__ == "__main__":
     graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
     graphics.objectLayer.append((spline, RGB(*RGB.CITRINE)))
 
-    graphics.refresh()
+    p1: gm.Point = gm.Point(125, 350)
+    p2: gm.Point = gm.Point(150, 345)
+    p3: gm.Point = gm.Point(175, 345)
+    p4: gm.Point = gm.Point(200, 350)
+    controls: list[gm.Point] = [p1, p2, p3, p4]
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.CITRINE)))
+
+    p1: gm.Point = gm.Point(200, 350)
+    p2: gm.Point = gm.Point(300, 425)
+    p3: gm.Point = gm.Point(175, 500)
+    p4: gm.Point = gm.Point(225, 525)
+    controls: list[gm.Point] = [p1, p2, p3, p4]
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.CITRINE)))
+
+    p1: gm.Point = gm.Point(225, 525)
+    p2: gm.Point = gm.Point(215, 540)
+    p3: gm.Point = gm.Point(185, 510)
+    p4: gm.Point = gm.Point(175, 540)
+    controls: list[gm.Point] = [p1, p2, p3, p4]
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.CITRINE)))
+
+    p1: gm.Point = gm.Point(175, 540)
+    p2: gm.Point = gm.Point(150, 570)
+    p3: gm.Point = gm.Point(125, 550)
+    p4: gm.Point = gm.Point(100, 550)
+    controls: list[gm.Point] = [p1, p2, p3, p4]
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.CITRINE)))
+
+    p1: gm.Point = gm.Point(217, 490)
+    p2: gm.Point = gm.Point(300, 570)
+    p3: gm.Point = gm.Point(325, 475)
+    p4: gm.Point = gm.Point(238, 400)
+    controls: list[gm.Point] = [p1, p2, p3, p4]
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.CITRINE)))
+
+    p1: gm.Point = gm.Point(224, 480)
+    p2: gm.Point = gm.Point(285, 550)
+    p3: gm.Point = gm.Point(310, 475)
+    p4: gm.Point = gm.Point(240, 415)
+    controls: list[gm.Point] = [p1, p2, p3, p4]
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.CITRINE)))
+
+    p1: gm.Point = gm.Point(118, 485)
+    p2: gm.Point = gm.Point(150, 492)
+    p3: gm.Point = gm.Point(185, 492)
+    p4: gm.Point = gm.Point(218, 485)
+    controls: list[gm.Point] = [p1, p2, p3, p4]
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.CITRINE)))
+
+    p1: gm.Point = gm.Point(118, 485)
+    p2: gm.Point = gm.Point(150, 478)
+    p3: gm.Point = gm.Point(185, 478)
+    p4: gm.Point = gm.Point(218, 485)
+    controls: list[gm.Point] = [p1, p2, p3, p4]
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.CITRINE)))
+
+    """building pitcher 1
+    using cubic b-spline with uniform knot vector
+    """
+    degreePoly: int = 3
+    knot: KnotVector = KnotVector(0, 1, 2, 3, 4, 5, 6, 7)
+
+    p1: gm.Point = gm.Point(350, 560)
+    p2: gm.Point = gm.Point(525, 550)
+    p3: gm.Point = gm.Point(535, 525)
+    p4: gm.Point = gm.Point(475, 450)
+    controls: list[gm.Point] = [p1, p2, p3, p4]
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p4: gm.Point = gm.Point(480, 375)
+    controls: list[gm.Point] = controls[1::]
+    controls.append(p4)
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p4: gm.Point = gm.Point(525, 350)
+    controls: list[gm.Point] = controls[1::]
+    controls.append(p4)
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p4: gm.Point = gm.Point(600, 350)
+    controls: list[gm.Point] = controls[1::]
+    controls.append(p4)
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p1: gm.Point = gm.Point(490, 390)
+    p2: gm.Point = gm.Point(510, 348)
+    p3: gm.Point = gm.Point(640, 348)
+    p4: gm.Point = gm.Point(660, 390)
+    controls: list[gm.Point] = [p1, p2, p3, p4]
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p1: gm.Point = gm.Point(450, 300)
+    p2: gm.Point = gm.Point(652, 342)
+    p3: gm.Point = gm.Point(650, 450)
+    p4: gm.Point = gm.Point(600, 500)
+    controls: list[gm.Point] = [p1, p2, p3, p4]
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p4: gm.Point = gm.Point(650, 540)
+    controls: list[gm.Point] = controls[1::]
+    controls.append(p4)
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p4: gm.Point = gm.Point(650, 550)
+    controls: list[gm.Point] = controls[1::]
+    controls.append(p4)
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p1: gm.Point = gm.Point(640, 520)
+    p2: gm.Point = gm.Point(648, 537)
+    p3: gm.Point = gm.Point(625, 540)
+    p4: gm.Point = gm.Point(610, 530)
+    controls: list[gm.Point] = [p1, p2, p3, p4]
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p4: gm.Point = gm.Point(590, 535)
+    controls: list[gm.Point] = controls[1::]
+    controls.append(p4)
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p4: gm.Point = gm.Point(550, 560)
+    controls: list[gm.Point] = controls[1::]
+    controls.append(p4)
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p4: gm.Point = gm.Point(490, 560)
+    controls: list[gm.Point] = controls[1::]
+    controls.append(p4)
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p4: gm.Point = gm.Point(475, 475)
+    controls: list[gm.Point] = controls[1::]
+    controls.append(p4)
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p1: gm.Point = gm.Point(600, 480)
+    p2: gm.Point = gm.Point(616, 490)
+    p3: gm.Point = gm.Point(646, 520)
+    p4: gm.Point = gm.Point(680, 540)
+    controls: list[gm.Point] = [p1, p2, p3, p4]
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p4: gm.Point = gm.Point(700, 500)
+    controls: list[gm.Point] = controls[1::]
+    controls.append(p4)
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p4: gm.Point = gm.Point(700, 460)
+    controls: list[gm.Point] = controls[1::]
+    controls.append(p4)
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p4: gm.Point = gm.Point(657, 400)
+    controls: list[gm.Point] = controls[1::]
+    controls.append(p4)
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p4: gm.Point = gm.Point(550, 375)
+    controls: list[gm.Point] = controls[1::]
+    controls.append(p4)
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p1: gm.Point = gm.Point(603, 470)
+    p2: gm.Point = gm.Point(619, 480)
+    p3: gm.Point = gm.Point(640, 500)
+    p4: gm.Point = gm.Point(675, 520)
+    controls: list[gm.Point] = [p1, p2, p3, p4]
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p4: gm.Point = gm.Point(690, 500)
+    controls: list[gm.Point] = controls[1::]
+    controls.append(p4)
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p4: gm.Point = gm.Point(690, 460)
+    controls: list[gm.Point] = controls[1::]
+    controls.append(p4)
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p4: gm.Point = gm.Point(660, 430)
+    controls: list[gm.Point] = controls[1::]
+    controls.append(p4)
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p4: gm.Point = gm.Point(550, 390)
+    controls: list[gm.Point] = controls[1::]
+    controls.append(p4)
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p1: gm.Point = gm.Point(400, 450)
+    p2: gm.Point = gm.Point(500, 490)
+    p3: gm.Point = gm.Point(623, 490)
+    p4: gm.Point = gm.Point(720, 450)
+    controls: list[gm.Point] = [p1, p2, p3, p4]
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    p1: gm.Point = gm.Point(400, 498)
+    p2: gm.Point = gm.Point(500, 478)
+    p3: gm.Point = gm.Point(623, 478)
+    p4: gm.Point = gm.Point(720, 498)
+    controls: list[gm.Point] = [p1, p2, p3, p4]
+    baseLine: gm.PolyLine = gm.PolyLine(*controls)
+    spline: BSpline = BSpline(controls, degreePoly, knot)
+    graphics.objectLayer.append((baseLine, RGB(*RGB.DARK_GREY)))
+    graphics.objectLayer.append((spline, RGB(*RGB.APPLE_GREEN)))
+
+    graphics.update()
+
+    leftText: gr.Text = gr.Text(
+        gr.Point(200, 400),
+        f"Using Cubic Bezier Spline\n"
+        f"Equivalent to B-Spline with non-uniform knot vector:\n"
+        f"(0, 0, 0, 0, 1, 1, 1, 1)",
+    )
+    leftText.setTextColor("white")
+    leftText.setSize(15)
+    leftText.draw(graphics.win)
+
+    rightText: gr.Text = gr.Text(
+        gr.Point(600, 400),
+        f"Using Cubic B-Spline\n"
+        f"with uniform knot vector:\n"
+        f"(0, 1, 2, 3, 4, 5, 6, 7)",
+    )
+    rightText.setTextColor("white")
+    rightText.setSize(15)
+    rightText.draw(graphics.win)
+
+    middelText: gr.Text = gr.Text(
+        gr.Point(halfWidth, 500),
+        f"Grey line represent control path",
+    )
+    middelText.setSize(15)
+    middelText.setTextColor("white")
+    middelText.draw(graphics.win)
+
+    graphics.win.getMouse()
