@@ -1,16 +1,16 @@
-from graphics import Text, color_rgb
+from graphics import GraphWin, Image, Point, Text, color_rgb
+
 """ SETTING """
 
 SCREEN_NAME = "CG"
 SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 512
-SCREEN_COLOR = color_rgb(0, 0, 0) #BLACK
-LINE_COLOR = color_rgb(255, 255, 255) # White
-DRAW_RATE = 1024 # Frequency of point using unit time step
+SCREEN_COLOR = color_rgb(0, 0, 0)  # BLACK
+LINE_COLOR = color_rgb(255, 255, 255)  # White
+DRAW_RATE = 1024  # Frequency of point using unit time step
 SHELL_NAME = "slowCG"
 """  """
 # library from https://mcsp.wartburg.edu/zelle/python/graphics.py
-from graphics import GraphWin, Image, Point, Rectangle
 import math
 
 SCREEN = GraphWin(SCREEN_NAME, SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -29,21 +29,23 @@ def intArgs(*args: int) -> tuple[int, ...]:
     INTed = map(int, args)
     return tuple(INTed)
 
+
 def isInteger(x: float):
     x = float(x)
 
     return x % 1 == 0
+
 
 # FLIP SPACE UPSIDE DOWN
 def flip(y: int) -> int:
     return SCREEN_HEIGHT - y
 
 
-def drawPoint(x: int, y: int, color: str=LINE_COLOR) -> None:
+def drawPoint(x: int, y: int, color: str = LINE_COLOR) -> None:
     SCREEN.plot(x, y, color=color)
 
 
-def drawPoints(pointsList: list[tuple[int, int]], color: str=LINE_COLOR) -> None:
+def drawPoints(pointsList: list[tuple[int, int]], color: str = LINE_COLOR) -> None:
     for x, y in pointsList:
         SCREEN.plot(x, y, color=color)
 
@@ -146,7 +148,15 @@ def lineBresenham(x1: int, y1: int, x2: int, y2: int) -> list[tuple[int, int]]:
     return pointList
 
 
-def line(x1: int, y1: int, x2: int, y2: int, width: int = 1, color: str=LINE_COLOR, mask: str = "1") -> None:
+def line(
+    x1: int,
+    y1: int,
+    x2: int,
+    y2: int,
+    width: int = 1,
+    color: str = LINE_COLOR,
+    mask: str = "1",
+) -> None:
     x1, y1, x2, y2, width = intArgs(x1, y1, x2, y2, width)
 
     y1 = flip(y1)
@@ -209,7 +219,13 @@ def midpointEllipse(
 
 
 def ellipse(
-    xC: int, yC: int, xRad: int, yRad: int, width: int = 1, color: str=LINE_COLOR, mask: str = "1"
+    xC: int,
+    yC: int,
+    xRad: int,
+    yRad: int,
+    width: int = 1,
+    color: str = LINE_COLOR,
+    mask: str = "1",
 ) -> None:
     xC, yC, xRad, yRad, width = intArgs(xC, yC, xRad, yRad, width)
 
@@ -235,14 +251,17 @@ def ellipse(
     drawPoints(fullEllipse)
 
 
-def circle(xC: int, yC: int, rad: int, width: int = 1, color: str=LINE_COLOR, mask: str = "1") -> None:
+def circle(
+    xC: int, yC: int, rad: int, width: int = 1, color: str = LINE_COLOR, mask: str = "1"
+) -> None:
     xC, yC, rad, width = intArgs(xC, yC, rad, width)
     ellipse(xC, yC, xRad=rad, yRad=rad, width=width, color=color, mask=mask)
+
 
 def stepEpitrochoid(a: int, b: int, k: int) -> list[tuple[int, int]]:
     pointList = []
 
-    #CONSTANT
+    # CONSTANT
     aPlusB = a + b
     aDivB = a / b
     doubPi = math.pi * 2
@@ -250,8 +269,10 @@ def stepEpitrochoid(a: int, b: int, k: int) -> list[tuple[int, int]]:
 
     stepT = 1 / DRAW_RATE
     t = 0
-    oldPoint = ('', '')
-    while not(isInteger(t * aDivB) and isInteger(t) and t != 0): # recurrence properties of ocillation from sin, cos
+    oldPoint = ("", "")
+    while not (
+        isInteger(t * aDivB) and isInteger(t) and t != 0
+    ):  # recurrence properties of ocillation from sin, cos
         x = aPlusB * math.cos(doubPi * t) - k * math.cos(innerK * t)
         y = aPlusB * math.sin(doubPi * t) - k * math.sin(innerK * t)
         x = round(x)
@@ -262,15 +283,16 @@ def stepEpitrochoid(a: int, b: int, k: int) -> list[tuple[int, int]]:
         if oldPoint != point:
             pointList.append(point)
         oldPoint = point
-        
+
         t += stepT
 
     return pointList
 
+
 def stepHypotrochoid(a: int, b: int, k: int) -> list[tuple[int, int]]:
     pointList = []
 
-    #CONSTANT
+    # CONSTANT
     aMinusB = a - b
     aDivB = a / b
     doubPi = math.pi * 2
@@ -278,8 +300,10 @@ def stepHypotrochoid(a: int, b: int, k: int) -> list[tuple[int, int]]:
 
     stepT = 1 / DRAW_RATE
     t = 0
-    oldPoint = ('', '')
-    while not(isInteger(t * aDivB) and isInteger(t) and t != 0): # recurrence properties of ocillation from sin, cos
+    oldPoint = ("", "")
+    while not (
+        isInteger(t * aDivB) and isInteger(t) and t != 0
+    ):  # recurrence properties of ocillation from sin, cos
         x = aMinusB * math.cos(doubPi * t) + k * math.cos(innerK * t)
         y = aMinusB * math.sin(doubPi * t) - k * math.sin(innerK * t)
         x = round(x)
@@ -295,7 +319,16 @@ def stepHypotrochoid(a: int, b: int, k: int) -> list[tuple[int, int]]:
 
     return pointList
 
-def epitrochoid(xC: int, yC: int, a: int, b: int, k: int, thickness: int=1, color: str=LINE_COLOR) -> None:
+
+def epitrochoid(
+    xC: int,
+    yC: int,
+    a: int,
+    b: int,
+    k: int,
+    thickness: int = 1,
+    color: str = LINE_COLOR,
+) -> None:
     xC, yC, a, b, k, thickness = intArgs(xC, yC, a, b, k, thickness)
     yC = flip(yC)
 
@@ -314,7 +347,16 @@ def epitrochoid(xC: int, yC: int, a: int, b: int, k: int, thickness: int=1, colo
     pointList = translateTo(xC, yC, pointList)
     drawPoints(pointList, color)
 
-def hypotrochoid(xC: int, yC: int, a: int, b: int, k: int, thickness: int=1, color: str=LINE_COLOR) -> None:
+
+def hypotrochoid(
+    xC: int,
+    yC: int,
+    a: int,
+    b: int,
+    k: int,
+    thickness: int = 1,
+    color: str = LINE_COLOR,
+) -> None:
     xC, yC, a, b, k, thickness = intArgs(xC, yC, a, b, k, thickness)
     yC = flip(yC)
 
@@ -332,11 +374,12 @@ def hypotrochoid(xC: int, yC: int, a: int, b: int, k: int, thickness: int=1, col
 
     pointList = translateTo(xC, yC, pointList)
     drawPoints(pointList, color)
-    
+
+
 # TODO assignment 3
 # (a) a = 20, b = 15, k = 30 with red color and 1-pixel thick
 epitrochoid(128, 384, 20, 15, 30, thickness=1, color=color_rgb(255, 64, 64))
-hypotrochoid(128,128,  20, 15, 30, thickness=1, color=color_rgb(255, 64, 64))
+hypotrochoid(128, 128, 20, 15, 30, thickness=1, color=color_rgb(255, 64, 64))
 textA = Text(Point(128, 256), "a=20 b=15 k=30 red 1thick")
 textA.setTextColor(LINE_COLOR)
 textA.draw(SCREEN)
@@ -349,8 +392,8 @@ textB.setTextColor(LINE_COLOR)
 textB.draw(SCREEN)
 
 # (c) a = 50, b = 35, k = 15 with blue color and 2-pixel thick
-epitrochoid(576, 384, 50, 35, 15, thickness=2, color=color_rgb(64,64, 255))
-hypotrochoid(576, 128, 50, 35, 15, thickness=2, color=color_rgb(64,64, 255))
+epitrochoid(576, 384, 50, 35, 15, thickness=2, color=color_rgb(64, 64, 255))
+hypotrochoid(576, 128, 50, 35, 15, thickness=2, color=color_rgb(64, 64, 255))
 textC = Text(Point(576, 256), "a=50 b=35 k=15 blue 2thick")
 textC.setTextColor(LINE_COLOR)
 textC.draw(SCREEN)
